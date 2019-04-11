@@ -1,0 +1,16 @@
+[
+{
+  "modid": "historycore",
+  "name": "History Core",
+  "description": "",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Squall, Navaronee"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
