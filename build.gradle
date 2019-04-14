@@ -33,7 +33,59 @@ minecraft {
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
+
+repositories {
+    mavenLocal()
+    maven {
+        name = "tterrag maven"
+        url = "http://maven.tterrag.com/"
+    }
+
+    maven {
+        name = "tterrag maven"
+        url = "http://maven2.tterrag.com/"
+    }
+    maven {
+        name = "ic2, forestry"
+        url = "http://maven.ic2.player.to/"
+    }
+    maven { //JEI
+        name = "Progwml6 maven"
+        url = "http://dvs1.progwml6.com/files/maven/"
+    }
+    maven { //JEI fallback
+        name = "ModMaven"
+        url = "modmaven.k-4u.nl"
+    }
+    maven {
+        name = "ChickenBones maven"
+        url = "http://chickenbones.net/maven/"
+    }
+    maven {
+        name = "CoFH Maven"
+        url = "http://maven.covers1624.net"
+    }
+    maven {
+        name = "tehnut maven"
+        url = "http://tehnut.info/maven/"
+    }
+    maven {
+        name = "CraftTweaker Maven"
+        url = "https://maven.blamejared.com/"
+    }
+}
+
 dependencies {
+
+    compile 'info.loenwind.autoconfig:AutoConfig:1.12.2-1.0.1'
+    compile 'info.loenwind.autosave:AutoSave:1.12.2-1.0.10'
+    compile ('com.enderio.core:EnderCore:1.12.2-0.5.43')
+    compile ('com.enderio:EnderIO:1.12.2-5.0.37') {
+        exclude group: 'deobf.com.enderio.core', module: 'EnderCore'
+    }
+
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
@@ -56,6 +108,7 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
 }
+
 
 processResources {
     // this will ensure that this task is redone when the versions change.
