@@ -1,13 +1,22 @@
 package com.historycraft.enderio.conduits.power;
 
+import com.enderio.core.client.render.IconUtil;
 import crazypants.enderio.base.conduit.IConduitTexture;
 import crazypants.enderio.base.conduit.geom.CollidableComponent;
 import crazypants.enderio.conduits.conduit.power.IPowerConduitData;
+import crazypants.enderio.conduits.conduit.power.PowerConduit;
+import crazypants.enderio.conduits.render.ConduitTextureWrapper;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
+import static com.historycraft.enderio.conduits.ConduitEnum.item_advanced_power_conduit;
+
 public class BaseAdvancedPowerConduitData implements IPowerConduitData {
+
+
 
     private final int id;
 
@@ -23,20 +32,29 @@ public class BaseAdvancedPowerConduitData implements IPowerConduitData {
 
     @Override
     public int getMaxEnergyIO() {
+        switch (this.getID()) {
+            case 3:
+                return 36000;
+        }
         return 0;
     }
 
     @Nonnull
     @Override
     public ItemStack createItemStackForSubtype() {
-        //TODO i have no ideia
-        return null;
+        return new ItemStack(item_advanced_power_conduit.getItemNN(), 1, getID());
     }
 
-    @Nonnull
     @Override
-    public IConduitTexture getTextureForState(@Nonnull CollidableComponent component) {
-        return null;
+    @SideOnly(Side.CLIENT)
+    public @Nonnull IConduitTexture getTextureForState(@Nonnull CollidableComponent component) {
+        if (component.isCore()) {
+            return AdvancedPowerConduit.ICONS.get(PowerConduit.ICON_CORE_KEY + AdvancedPowerConduit.POSTFIX[getID()]);
+        }
+        if (PowerConduit.COLOR_CONTROLLER_ID.equals(component.data)) {
+            return new ConduitTextureWrapper(IconUtil.instance.whiteTexture);
+        }
+        return AdvancedPowerConduit.ICONS.get(PowerConduit.ICON_KEY + AdvancedPowerConduit.POSTFIX[getID()]);
     }
 
 

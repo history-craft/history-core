@@ -8,6 +8,7 @@ import crazypants.enderio.api.IModTileEntity;
 import crazypants.enderio.base.init.IModObjectBase;
 import crazypants.enderio.base.init.ModObjectRegistry;
 import crazypants.enderio.base.init.RegisterModObject;
+import crazypants.enderio.base.registry.Registry;
 import crazypants.enderio.conduits.init.ConduitObject;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -34,10 +35,8 @@ public enum ConduitEnum implements IModObjectBase {
 
     @SubscribeEvent
     public static void registerBlocksEarly(@Nonnull RegisterModObject event) {
-    //    Registry.registerConduitBlock(block_conduit_bundle);
-        event.register(ConduitObject.class);
+        event.register(ConduitEnum.class);
     }
-
 
     ConduitEnum(@Nonnull BiFunction<IModObject, Block, Item> itemMaker) {
         this(null, itemMaker, null);
