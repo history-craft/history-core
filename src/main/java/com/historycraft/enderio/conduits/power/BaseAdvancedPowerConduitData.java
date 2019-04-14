@@ -16,12 +16,12 @@ import static com.historycraft.enderio.conduits.ConduitEnum.item_advanced_power_
 
 public class BaseAdvancedPowerConduitData implements IPowerConduitData {
 
-
-
     private final int id;
+    private final int rf;
 
-    public BaseAdvancedPowerConduitData(int id) {
+    public BaseAdvancedPowerConduitData(int id, int rf) {
         this.id = id;
+        this.rf = rf;
     }
 
 
@@ -32,11 +32,7 @@ public class BaseAdvancedPowerConduitData implements IPowerConduitData {
 
     @Override
     public int getMaxEnergyIO() {
-        switch (this.getID()) {
-            case 3:
-                return 36000;
-        }
-        return 0;
+        return rf;
     }
 
     @Nonnull
@@ -49,12 +45,12 @@ public class BaseAdvancedPowerConduitData implements IPowerConduitData {
     @SideOnly(Side.CLIENT)
     public @Nonnull IConduitTexture getTextureForState(@Nonnull CollidableComponent component) {
         if (component.isCore()) {
-            return AdvancedPowerConduit.ICONS.get(PowerConduit.ICON_CORE_KEY + AdvancedPowerConduit.POSTFIX[getID()]);
+            return AdvancedPowerConduit.ICONS.get(AdvancedPowerConduit.ICON_CORE_KEY + AdvancedPowerConduit.POSTFIX[getID() -3 ]);
         }
         if (PowerConduit.COLOR_CONTROLLER_ID.equals(component.data)) {
             return new ConduitTextureWrapper(IconUtil.instance.whiteTexture);
         }
-        return AdvancedPowerConduit.ICONS.get(PowerConduit.ICON_KEY + AdvancedPowerConduit.POSTFIX[getID()]);
+        return AdvancedPowerConduit.ICONS.get(AdvancedPowerConduit.ICON_KEY + AdvancedPowerConduit.POSTFIX[getID() -3 ]);
     }
 
 

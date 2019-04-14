@@ -1,5 +1,6 @@
 package com.historycraft;
 
+import com.historycraft.enderio.conduits.power.AdvancedPowerConduit;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -7,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(modid = HistoryCore.MODID, name = HistoryCore.NAME, version = HistoryCore.VERSION)
 public class HistoryCore {
+
+    AdvancedPowerConduit advancedPowerConduit;
 
     public static final String MODID = "historycore";
     public static final String NAME = "History Core";
