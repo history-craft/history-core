@@ -23,7 +23,7 @@ compileJava {
 minecraft {
     version = "1.12.2-14.23.5.2825"
     runDir = "run"
-    
+
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
     // stable_#            stables are built at the discretion of the MCP team.
@@ -79,34 +79,12 @@ dependencies {
 
     compile 'info.loenwind.autoconfig:AutoConfig:1.12.2-1.0.1'
     compile 'info.loenwind.autosave:AutoSave:1.12.2-1.0.10'
-    compile ('com.enderio.core:EnderCore:1.12.2-0.5.43')
-    compile ('com.enderio:EnderIO:1.12.2-5.0.37') {
+    compile "com.enderio.core:EnderCore:1.12.2-0.5.56:core"
+    deobfCompile 'com.enderio.core:EnderCore:1.12.2-0.5.56'
+    deobfCompile ('com.enderio:EnderIO:1.12.2-5.0.43') {
         exclude group: 'deobf.com.enderio.core', module: 'EnderCore'
     }
-
     compile fileTree(include: ['*.jar'], dir: 'libs')
-
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    //compile "some.group:artifact:version:classifier"
-    //compile "some.group:artifact:version"
-      
-    // real examples
-    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // the deobf configurations:  'deobfCompile' and 'deobfProvided' are the same as the normal compile and provided,
-    // except that these dependencies get remapped to your current MCP mappings
-    //deobfCompile 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-    //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
 }
 
 
@@ -118,11 +96,11 @@ processResources {
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-                
+
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version': project.version, 'mcversion': project.minecraft.version
     }
-        
+
     // copy everything else except the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'

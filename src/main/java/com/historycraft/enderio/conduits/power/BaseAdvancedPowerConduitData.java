@@ -1,8 +1,8 @@
 package com.historycraft.enderio.conduits.power;
 
+import crazypants.enderio.base.conduit.IConduitTexture;
 import crazypants.enderio.base.conduit.geom.CollidableComponent;
 import crazypants.enderio.conduits.conduit.power.IPowerConduitData;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -35,8 +35,9 @@ public class BaseAdvancedPowerConduitData implements IPowerConduitData {
 
     @Nonnull
     @Override
-    public TextureAtlasSprite getTextureForState(@Nonnull CollidableComponent component) {
-        //TODO textures
+    public IConduitTexture getTextureForState(@Nonnull CollidableComponent component) {
         return null;
     }
+
+
 }

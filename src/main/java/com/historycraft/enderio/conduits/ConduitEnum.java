@@ -106,13 +106,13 @@ public enum ConduitEnum implements IModObjectBase {
         block = obj;
     }
 
-//    @Override
-//    public @Nonnull Function<IModObject, Block> getBlockCreator() {
-//        return blockMaker != null ? blockMaker : mo -> null;
-//    }
-//
-//    @Override
-//    public @Nonnull BiFunction<IModObject, Block, Item> getItemCreator() {
-//        return NullHelper.first(itemMaker, IModObject.WithBlockItem.itemCreator);
-//    }
+    @Override
+    public @Nonnull Function<IModObject, Block> getBlockCreator() {
+        return blockMaker != null ? blockMaker : mo -> null;
+    }
+
+    @Override
+    public @Nonnull BiFunction<IModObject, Block, Item> getItemCreator() {
+        return NullHelper.first(itemMaker, IModObject.WithBlockItem.itemCreator);
+    }
 }
