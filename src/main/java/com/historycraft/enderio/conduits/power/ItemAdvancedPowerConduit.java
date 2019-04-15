@@ -30,8 +30,10 @@ import java.util.List;
 public class ItemAdvancedPowerConduit extends AbstractItemConduit {
 
     static {
-        IPowerConduitData.Registry.register(new BaseAdvancedPowerConduitData(3,30000));
-        IPowerConduitData.Registry.register(new BaseAdvancedPowerConduitData(4,100000));
+        IPowerConduitData.Registry.register(new BaseAdvancedPowerConduitData(3, 32768));
+        IPowerConduitData.Registry.register(new BaseAdvancedPowerConduitData(4, 131072));
+        IPowerConduitData.Registry.register(new BaseAdvancedPowerConduitData(5, 524288));
+        IPowerConduitData.Registry.register(new BaseAdvancedPowerConduitData(6, 2097152));
     }
 
     public static ItemAdvancedPowerConduit create(@Nonnull IModObject modObject, @Nullable Block block) {
@@ -42,7 +44,9 @@ public class ItemAdvancedPowerConduit extends AbstractItemConduit {
     protected ItemAdvancedPowerConduit(@Nonnull IModObject modObject) {
         super(modObject,
                 new ItemConduitSubtype(modObject.getUnlocalisedName() + "_tungstensteel", modObject.getRegistryName().toString() + "_tungstensteel"),
-                new ItemConduitSubtype(modObject.getUnlocalisedName() + "_naquadah", modObject.getRegistryName().toString() + "_naquadah")
+                new ItemConduitSubtype(modObject.getUnlocalisedName() + "_hssg", modObject.getRegistryName().toString() + "_hssg"),
+                new ItemConduitSubtype(modObject.getUnlocalisedName() + "_naquadah", modObject.getRegistryName().toString() + "_naquadah"),
+                new ItemConduitSubtype(modObject.getUnlocalisedName() + "_naquadah_alloy", modObject.getRegistryName().toString() + "_naquadah_alloy")
         );
 
         AdvancedPowerConduit.registerTextures();

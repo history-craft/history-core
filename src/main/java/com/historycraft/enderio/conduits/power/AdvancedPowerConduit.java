@@ -20,7 +20,7 @@ public class AdvancedPowerConduit {
 
     static final Map<String, IConduitTexture> ICONS = new HashMap<>();
 
-    static final String[] POSTFIX = new String[]{"_tungstensteel", "_naquadah"};
+    static final String[] POSTFIX = new String[]{"_tungstensteel", "_hssg", "_naquadah", "_naquadah_alloy"};
 
     public static void registerTextures() {
         int i = 0;
