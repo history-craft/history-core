@@ -5,15 +5,11 @@ import com.historycraft.HistoryCore;
 import com.historycraft.enderio.conduits.power.ItemAdvancedPowerConduit;
 import crazypants.enderio.api.IModObject;
 import crazypants.enderio.api.IModTileEntity;
-import crazypants.enderio.base.EnderIO;
 import crazypants.enderio.base.init.IModObjectBase;
 import crazypants.enderio.base.init.ModObjectRegistry;
 import crazypants.enderio.base.init.RegisterModObject;
-import crazypants.enderio.base.registry.Registry;
-import crazypants.enderio.conduits.init.ConduitObject;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
