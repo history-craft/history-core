@@ -1,6 +1,7 @@
 package com.historycraft;
 
 
+import com.historycraft.recipe.RecipeHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -26,12 +27,12 @@ public class HistoryCore {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event)
     {
-        logger.info("history-craft first message");
+
     }
 
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        Recipes.changeCrusherRecipes();
+        RecipeHandler.changeRecipes();
     }
 }

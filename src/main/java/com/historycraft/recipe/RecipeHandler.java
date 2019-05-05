@@ -1,14 +1,19 @@
-package com.historycraft;
+package com.historycraft.recipe;
 
 import blusunrize.immersiveengineering.api.crafting.CrusherRecipe;
+import com.historycraft.HistoryCore;
 import gnu.trove.map.TObjectIntMap;
 import gregtech.api.recipes.RecipeMaps;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
-public class Recipes {
+public class RecipeHandler {
 
-    public static void changeCrusherRecipes() {
+    public static void changeRecipes() {
+        changeCrusherRecipes();
+    }
+
+    private static void changeCrusherRecipes() {
         HistoryCore.logger.info("removing recipes");
         RecipeMaps.MACERATOR_RECIPES.getRecipeList().forEach(recipe -> {
             NonNullList<ItemStack> outputs = recipe.getOutputs();
