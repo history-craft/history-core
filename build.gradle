@@ -84,6 +84,7 @@ dependencies {
     deobfCompile ('com.enderio:EnderIO:1.12.2-5.0.43') {
         exclude group: 'deobf.com.enderio.core', module: 'EnderCore'
     }
+    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.9.6"
     compile fileTree(include: ['*.jar'], dir: 'libs')
 }
 
