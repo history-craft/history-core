@@ -17,18 +17,14 @@ public class Recipes {
             recipe.getInputs().forEach(input ->{
                 for (int x = 0; x <input.getIngredient().getMatchingStacks().length; x++) {
                     ItemStack itemStack = input.getIngredient().getMatchingStacks()[x];
-                    CrusherRecipe crusherRecipe = CrusherRecipe.findRecipe(itemStack);
-                    if (crusherRecipe != null) {
-                        CrusherRecipe.removeRecipesForInput(itemStack);
-                        CrusherRecipe newRecipe = CrusherRecipe.addRecipe(outputs.get(0), itemStack, recipe.getEUt() * 4);
-                        for (int y = 1; y < outputs.size(); y++){
-                            newRecipe.addToSecondaryOutput(outputs.get(y), 1.0F);
-                        }
-                        for (Object stack : chancedOutputs.keys()) {
-                            float chance = (float) chancedOutputs.get(stack) / 10000;
-                            newRecipe.addToSecondaryOutput(stack, chance);
-                        }
-                        HistoryCore.logger.info("replaced {}", itemStack);
+                    CrusherRecipe.removeRecipesForInput(itemStack);
+                    CrusherRecipe newRecipe = CrusherRecipe.addRecipe(outputs.get(0), itemStack, recipe.getEUt() * 4);
+                    for (int y = 1; y < outputs.size(); y++){
+                        newRecipe.addToSecondaryOutput(outputs.get(y), 1.0F);
+                    }
+                    for (Object stack : chancedOutputs.keys()) {
+                        float chance = (float) chancedOutputs.get(stack) / 10000;
+                        newRecipe.addToSecondaryOutput(stack, chance);
                     }
                 }
             });
