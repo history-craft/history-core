@@ -1,6 +1,7 @@
 package com.historycraft;
 
 
+import com.historycraft.config.ConfigHandler;
 import com.historycraft.recipe.RecipeHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -22,6 +23,7 @@ public class HistoryCore {
     public void preInit(FMLPreInitializationEvent event)
     {
         logger = event.getModLog();
+        ConfigHandler.init();
     }
 
     @Mod.EventHandler

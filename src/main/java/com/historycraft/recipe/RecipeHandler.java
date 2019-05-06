@@ -10,16 +10,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeHandler {
 
-    private static String [] removedByProduct = new String[] {"dustAluminium"};
+    public static String [] removedByProduct = new String[]{};
 
     public static void changeRecipes() {
         changeCrusherRecipes();
+        changeRollingMachine();
+    }
+
+    private static void changeRollingMachine() {
+//        List<IRecipe> recipes = RecipesMachine.getInstance().getRecipes(TileRollingMachine.class);
+//        RecipeMaps.BENDER_RECIPES;
     }
 
     private static void changeCrusherRecipes() {
