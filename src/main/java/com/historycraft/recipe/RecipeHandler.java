@@ -2,6 +2,7 @@ package com.historycraft.recipe;
 
 import blusunrize.immersiveengineering.api.crafting.CrusherRecipe;
 import com.historycraft.HistoryCore;
+import com.historycraft.config.HistoryCoreConfig;
 import gnu.trove.map.TObjectIntMap;
 import gregtech.api.GTValues;
 import gregtech.api.recipes.Recipe;
@@ -15,6 +16,8 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TileCuttingMachine;
+import zmaster587.advancedRocketry.tile.multiblock.machine.TileLathe;
 import zmaster587.advancedRocketry.tile.multiblock.machine.TileRollingMachine;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
@@ -26,19 +29,95 @@ import java.util.Map;
 
 public class RecipeHandler {
 
-    public static String [] removedByProduct = new String[]{};
+    public static String[] removedByProduct = new String[]{};
     public static Map<FluidStack, Integer> lubricants = new HashMap<>();
 
     public static void changeRecipes() {
-        changeCrusherRecipes();
-        changeRollingMachine();
+        if (HistoryCoreConfig.changeCrusherRecipes)
+            changeCrusherRecipes();
+
+        if (HistoryCoreConfig.changeRollingMachineRecipes)
+            changeRollingMachineRecipes();
+
+        if (HistoryCoreConfig.changeLatheRecipes)
+            changeLatheRecipes();
+
+        if (HistoryCoreConfig.changeSawRecipes) {
+            changeSawRecipes();
+        }
+
+    }
+
+    private static void changeSawRecipes() {
+        RecipesMachine.getInstance().recipeList.get(TileCuttingMachine.class).clear();
+        RecipeMaps.CUTTER_RECIPES.getRecipeList().forEach(recipe -> {
+            recipe.getInputs().forEach(input -> {
+                for (int x = 0; x < input.getIngredient().getMatchingStacks().length; x++) {
+                    ItemStack itemStack = input.getIngredient().getMatchingStacks()[x];
+                    if (getOreDictByItemStack(itemStack).stream().filter(s -> s.contains("Wood")).count() > 0){
+                        RecipesMachine.getInstance().addRecipe(TileCuttingMachine.class, recipe.getOutputs().toArray(), 25, 350, itemStack);
+                    }
+                }
+            });
+        });
+    }
+
+    private static void changeLatheRecipes() {
+        removeOldRecipes(TileLathe.class, "rod");
+        for (String ingotName : OreDictionary.getOreNames()) {
+            if (ingotName.startsWith("ingot")) {
+
+                if (OreDictionary.getOres(ingotName).isEmpty()) {
+                    HistoryCore.logger.info("can't find stack for ingot {} ", ingotName);
+                    continue;
+                }
+                String materialName = ingotName.replace("ingot", "");
+                addLatheRecipe(materialName, "ingot", "stick", 2);
+            }
+        }
+    }
+
+    private static void addLatheRecipe(String materialName, String input, String output, int multiplier) {
+        String inputName = input + materialName;
+        String outputName = output + materialName;
+
+        if (OreDictionary.doesOreNameExist(outputName)) {
+            ItemStack outputStack = null;
+            if (OreDictionary.getOres(outputName).isEmpty()) {
+                HistoryCore.logger.info("can't find stack for {} ", outputName);
+                return;
+            }
+
+            //find greg itemstack first
+            NonNullList<ItemStack> plateStacks = OreDictionary.getOres(outputName);
+            for (ItemStack itemStack : plateStacks) {
+                if (GTValues.MODID.equals(ForgeHooks.getDefaultCreatorModId(itemStack))) {
+                    outputStack = itemStack;
+                }
+            }
+            if (outputStack == null) {
+                outputStack = OreDictionary.getOres(outputName).get(0);
+            }
+            int power = 300;
+            int time = 200;
+
+            Material ingot = Material.MATERIAL_REGISTRY.getObject(materialName.toLowerCase());
+
+            if (ingot != null) {
+                time = (int) ingot.getAverageMass() / 2;
+                power = (int) ingot.getAverageMass() * 2;
+            }
+
+            outputStack.setCount(multiplier);
+            RecipesMachine.getInstance().addRecipe(TileLathe.class, outputStack, time, power, inputName);
+        }
     }
 
     private static void addRollingMachineRecipe(String materialName, String input, String output, int multiplier) {
         String inputName = input + materialName;
-        String outputName= output + materialName;
+        String outputName = output + materialName;
 
-        if (OreDictionary.doesOreNameExist(outputName)){
+        if (OreDictionary.doesOreNameExist(outputName)) {
 
             ItemStack outputStack = null;
             if (OreDictionary.getOres(outputName).isEmpty()) {
@@ -48,8 +127,8 @@ public class RecipeHandler {
 
             //find greg itemstack first
             NonNullList<ItemStack> plateStacks = OreDictionary.getOres(outputName);
-            for (ItemStack itemStack: plateStacks) {
-                if (GTValues.MODID.equals(ForgeHooks.getDefaultCreatorModId(itemStack))){
+            for (ItemStack itemStack : plateStacks) {
+                if (GTValues.MODID.equals(ForgeHooks.getDefaultCreatorModId(itemStack))) {
                     outputStack = itemStack;
                 }
             }
@@ -68,11 +147,32 @@ public class RecipeHandler {
 
             outputStack.setCount(multiplier);
 
-            for (FluidStack fluidStack: lubricants.keySet()) {
+            for (FluidStack fluidStack : lubricants.keySet()) {
                 int divisor = lubricants.get(fluidStack);
                 RecipesMachine.getInstance().addRecipe(TileRollingMachine.class, outputStack, time / divisor, power, inputName, fluidStack);
             }
 
+        }
+    }
+
+    private static void changeRollingMachineRecipes() {
+
+        removeOldRecipes(TileRollingMachine.class, "plate");
+
+        lubricants.put(new FluidStack(FluidRegistry.WATER, 1000), 1);
+        lubricants.put(Materials.Lubricant.getFluid(100), 4);
+
+        for (String ingotName : OreDictionary.getOreNames()) {
+            if (ingotName.startsWith("ingot")) {
+
+                if (OreDictionary.getOres(ingotName).isEmpty()) {
+                    HistoryCore.logger.info("can't find stack for ingot {} ", ingotName);
+                    continue;
+                }
+                String materialName = ingotName.replace("ingot", "");
+                addRollingMachineRecipe(materialName, "ingot", "plate", 1);
+                addRollingMachineRecipe(materialName, "plate", "foil", 4);
+            }
         }
     }
 
@@ -81,41 +181,21 @@ public class RecipeHandler {
         List<IRecipe> iRecipes = RecipesMachine.getInstance().recipeList.get(clazz);
         for (IRecipe iRecipe : iRecipes) {
             boolean added = false;
-            for (ItemStack stack: iRecipe.getOutput()){
+            for (ItemStack stack : iRecipe.getOutput()) {
                 List<String> oreDicts = getOreDictByItemStack(stack);
-                for(String oreDict: oreDicts) {
+                for (String oreDict : oreDicts) {
                     if (oreDict.startsWith(name)) {
                         toRemove.add(iRecipe);
-                        added=true;
+                        added = true;
                         break;
                     }
                 }
-                if(added); break;
+                if (added)
+                    break;
             }
         }
         if (!toRemove.isEmpty()) {
             iRecipes.removeAll(toRemove);
-        }
-    }
-
-    private static void changeRollingMachine() {
-
-        removeOldRecipes(TileRollingMachine.class, "plate");
-
-        lubricants.put(new FluidStack(FluidRegistry.WATER, 1000), 1);
-        lubricants.put(Materials.Lubricant.getFluid(100), 4);
-
-        for(String ingotName: OreDictionary.getOreNames()){
-            if(ingotName.startsWith("ingot")){
-
-                if (OreDictionary.getOres(ingotName).isEmpty()) {
-                    HistoryCore.logger.info("can't find stack for ingot {} ", ingotName);
-                    continue;
-                }
-                String materialName = ingotName.replace("ingot", "");
-                addRollingMachineRecipe(materialName,"ingot", "plate", 1);
-                addRollingMachineRecipe(materialName,"plate", "foil", 4);
-            }
         }
     }
 
@@ -126,12 +206,12 @@ public class RecipeHandler {
             NonNullList<ItemStack> outputs = recipe.getOutputs();
             TObjectIntMap<ItemStack> chancedOutputs = recipe.getChancedOutputs();
 
-            recipe.getInputs().forEach(input ->{
-                for (int x = 0; x <input.getIngredient().getMatchingStacks().length; x++) {
+            recipe.getInputs().forEach(input -> {
+                for (int x = 0; x < input.getIngredient().getMatchingStacks().length; x++) {
                     ItemStack itemStack = input.getIngredient().getMatchingStacks()[x];
                     CrusherRecipe.removeRecipesForInput(itemStack);
                     CrusherRecipe newRecipe = CrusherRecipe.addRecipe(outputs.get(0), itemStack, recipe.getEUt() * 4);
-                    for (int y = 1; y < outputs.size(); y++){
+                    for (int y = 1; y < outputs.size(); y++) {
                         ItemStack stack = outputs.get(y);
                         if (isEnableByProduct(stack)) {
                             newRecipe.addToSecondaryOutput(stack, 1.0F);
@@ -173,7 +253,7 @@ public class RecipeHandler {
     private static List<String> getOreDictByItemStack(ItemStack itemStack) {
         List<String> result = new ArrayList<>();
         int[] oreIDs = OreDictionary.getOreIDs(itemStack);
-        for (int id: oreIDs) {
+        for (int id : oreIDs) {
             result.add(OreDictionary.getOreName(id));
         }
 
@@ -181,8 +261,8 @@ public class RecipeHandler {
     }
 
     private static boolean isEnableByProduct(ItemStack itemStack) {
-        for (String name: getOreDictByItemStack(itemStack)) {
-            for (String product : removedByProduct){
+        for (String name : getOreDictByItemStack(itemStack)) {
+            for (String product : removedByProduct) {
                 if (name.equalsIgnoreCase(product)) {
                     return false;
                 }
