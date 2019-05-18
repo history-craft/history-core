@@ -12,6 +12,7 @@ import gregtech.api.unification.material.Materials;
 import gregtech.api.unification.material.type.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -22,15 +23,13 @@ import zmaster587.advancedRocketry.tile.multiblock.machine.TileRollingMachine;
 import zmaster587.libVulpes.interfaces.IRecipe;
 import zmaster587.libVulpes.recipe.RecipesMachine;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RecipeHandler {
 
-    public static String[] removedByProduct = new String[]{};
+    public static String[] removedByProduct = new String[]{"ore1","ore2"};
     public static Map<FluidStack, Integer> lubricants = new HashMap<>();
+    public static Set<Map.Entry<ResourceLocation, net.minecraft.item.crafting.IRecipe>> recipes;
 
     public static void changeRecipes() {
         if (HistoryCoreConfig.changeCrusherRecipes)
@@ -45,6 +44,8 @@ public class RecipeHandler {
         if (HistoryCoreConfig.changeSawRecipes) {
             changeSawRecipes();
         }
+
+        CleanRecipeHandler.doCleanUp();
 
     }
 

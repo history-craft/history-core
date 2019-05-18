@@ -1,8 +1,10 @@
 package com.historycraft.config;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.historycraft.HistoryCore;
-import com.historycraft.recipe.RecipeHandler;
 import net.minecraftforge.fml.common.Loader;
 
 import java.io.File;
@@ -12,20 +14,19 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConfigHandler {
+public abstract class ConfigHandler {
 
-    public static final Gson gson = new Gson();
-    public static File configFile;
+    public final Gson gson = new Gson();
+    public static Path modPath = Loader.instance().getConfigDir().toPath().resolve(HistoryCore.MODID);
+    public File configFile;
 
-    public static void init() {
-        Path modPath = Loader.instance().getConfigDir().toPath().resolve(HistoryCore.MODID);
-        createDefaultFiles(modPath);
-        RecipeHandler.removedByProduct = readProperty("crusher");
+    public ConfigHandler(String fileName) {
+        configFile = new File(modPath.toFile(), fileName + ".json");
     }
 
-    private static String[] readProperty(String property) {
+    public String[] readArrayProperty(String property) {
         List<String> list = new ArrayList<>();
-         try {
+        try {
             FileReader fileReader = new FileReader(configFile);
             JsonParser jsonParser = new JsonParser();
             JsonObject jsonObject = jsonParser.parse(fileReader).getAsJsonObject();
@@ -37,28 +38,33 @@ public class ConfigHandler {
         return list.toArray(new String[0]);
     }
 
-
-    private static void createDefaultFiles(Path modPath) {
-        if (!modPath.toFile().exists()) {
-            modPath.toFile().mkdir();
-        }
-        configFile = new File(modPath.toFile(), "removed.json");
-        if (!configFile.exists()) {
-            JsonObject jsonObject = new JsonObject();
-            JsonArray array = new JsonArray();
-            array.add("ore1");
-            array.add("ore2");
-            jsonObject.add("crusher",array);
-            System.out.println("Json: " + jsonObject.toString());
+    public void init() {
+        if (!configFile.exists()){
+            if (!modPath.toFile().exists()) {
+                modPath.toFile().mkdir();
+            }
             try {
                 FileWriter fileWriter = new FileWriter(configFile);
-                gson.toJson(jsonObject, fileWriter);
+                gson.toJson(createDefaultFile(), fileWriter);
                 fileWriter.flush();
                 fileWriter.close();
             } catch (Exception ex) {
                 HistoryCore.logger.error(ex);
             }
         }
+        doConfig();
+    }
+
+    protected abstract void doConfig();
+
+    public abstract JsonObject createDefaultFile();
+
+    public JsonArray copyFromArray(String [] array){
+        JsonArray jsonArray = new JsonArray();
+        for(String value : array) {
+            jsonArray.add(value);
+        }
+        return jsonArray;
     }
 
 }
