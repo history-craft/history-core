@@ -3,6 +3,7 @@ package com.historycraft;
 
 import com.historycraft.config.JEICleanupConfigHandler;
 import com.historycraft.config.RecipeCopyConfigHandler;
+import com.historycraft.config.RecipeRemoveConfigHandler;
 import com.historycraft.recipe.RecipeHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -30,6 +31,9 @@ public class HistoryCore {
 
         JEICleanupConfigHandler jeiCleanupConfigHandler = new JEICleanupConfigHandler();
         jeiCleanupConfigHandler.init();
+
+        RecipeRemoveConfigHandler recipeRemoveConfigHandler = new RecipeRemoveConfigHandler();
+        recipeRemoveConfigHandler.init();
     }
 
     @Mod.EventHandler

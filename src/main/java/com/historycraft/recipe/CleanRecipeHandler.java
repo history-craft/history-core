@@ -1,6 +1,13 @@
 package com.historycraft.recipe;
 
 import appeng.core.AppEng;
+import com.historycraft.HistoryCore;
+import com.historycraft.api.utils.HistoryCraftUtils;
+import com.historycraft.config.RecipeRemoveConfig;
+import com.historycraft.config.RecipeRemoveConfigHandler;
+import com.historycraft.jei.JEIAddonPlugin;
+import com.historycraft.jei.JEICleanup;
+import mezz.jei.api.ingredients.VanillaTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
@@ -11,22 +18,39 @@ import net.minecraftforge.registries.RegistryManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CleanRecipeHandler {
 
     private static List<ResourceLocation> removingRecipes = new ArrayList<>();
+    private static RecipeRemoveConfig recipeRemoveConfig = RecipeRemoveConfigHandler.getConfig();
 
     public static void doCleanUp() {
         for (Map.Entry<ResourceLocation, IRecipe> map : RecipeHandler.recipes) {
             IRecipe iRecipe  = map.getValue();
             ItemStack recipeOutput = iRecipe.getRecipeOutput();
-            if (AppEng.MOD_ID.equals(ForgeHooks.getDefaultCreatorModId(recipeOutput))){
-                if (!"appliedenergistics2:drive".equals(recipeOutput.getItem().getRegistryName().toString()))
-                   if (!"appliedenergistics2:material:44".equals(recipeOutput.getItem().getRegistryName() + ":"+ recipeOutput.getItemDamage())){
-                        removingRecipes.add(map.getKey());
+            recipeRemoveConfig.getMods().forEach(mod -> {
+                AtomicBoolean toRemove = new AtomicBoolean(false);
+                if (mod.getModId().equals(ForgeHooks.getDefaultCreatorModId(recipeOutput))){
+                    toRemove.set(true);
+                    if (!mod.getWhiteList().isEmpty()) {
+                        mod.getWhiteList().forEach(itemName -> {
+                            if (HistoryCraftUtils.getInstance().isItemName(itemName, recipeOutput)) {
+                                toRemove.set(false);
+                            }
+                        });
                     }
-
-            }
+                }
+                if (toRemove.get()) {
+                    HistoryCore.logger.info("removed recipe from: {} ", recipeOutput);
+                    removingRecipes.add(map.getKey());
+                    if (mod.isHide()) {
+                        JEICleanup.itemsToRemove.add(recipeOutput);
+                    }
+                } else {
+                    HistoryCore.logger.info("skipped recipe from: {} ", recipeOutput);
+                }
+            });
         }
         removingRecipes.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe));
     }

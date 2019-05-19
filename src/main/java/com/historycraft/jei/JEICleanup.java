@@ -14,7 +14,7 @@ public class JEICleanup {
 
     public static String [] orderModId = new String[] {"minecraft", GTValues.MODID};
     public static String [] removeDuplicates = new String[] {"plate","rod", "ingot", "circuit"};
-    private static List<ItemStack> itemsToRemove = new ArrayList<>();
+    public static List<ItemStack> itemsToRemove = new ArrayList<>();
 
     public static void applyCleanup() {
         cleanDuplicatedItems();
