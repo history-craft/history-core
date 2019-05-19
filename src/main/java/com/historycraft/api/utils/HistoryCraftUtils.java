@@ -36,6 +36,14 @@ public class HistoryCraftUtils {
         return true;
     }
 
+    public boolean isOreDictName(String configName, ItemStack itemStack) {
+        return false;
+    }
+
+    public boolean isOreDictName(String configName, String oreDictName) {
+        return false;
+    }
+
 
     public static HistoryCraftUtils getInstance() {
         if (historyCraftUtils == null) {

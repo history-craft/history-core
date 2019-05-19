@@ -1,7 +1,7 @@
 package com.historycraft;
 
 
-import com.historycraft.config.JEICleanupConfigHandler;
+import com.historycraft.config.OreDictUnificationConfigHandler;
 import com.historycraft.config.RecipeCopyConfigHandler;
 import com.historycraft.config.RecipeRemoveConfigHandler;
 import com.historycraft.recipe.RecipeHandler;
@@ -17,7 +17,7 @@ public class HistoryCore {
 
     public static final String MODID = "historycore";
     public static final String NAME = "History Core";
-    public static final String VERSION = "1.0.2";
+    public static final String VERSION = "1.1";
 
     public static Logger logger;
 
@@ -29,7 +29,7 @@ public class HistoryCore {
         RecipeCopyConfigHandler recipeCopyConfigHandler = new RecipeCopyConfigHandler();
         recipeCopyConfigHandler.init();
 
-        JEICleanupConfigHandler jeiCleanupConfigHandler = new JEICleanupConfigHandler();
+        OreDictUnificationConfigHandler jeiCleanupConfigHandler = new OreDictUnificationConfigHandler();
         jeiCleanupConfigHandler.init();
 
         RecipeRemoveConfigHandler recipeRemoveConfigHandler = new RecipeRemoveConfigHandler();

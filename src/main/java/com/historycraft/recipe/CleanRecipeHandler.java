@@ -1,13 +1,10 @@
 package com.historycraft.recipe;
 
-import appeng.core.AppEng;
 import com.historycraft.HistoryCore;
 import com.historycraft.api.utils.HistoryCraftUtils;
 import com.historycraft.config.RecipeRemoveConfig;
 import com.historycraft.config.RecipeRemoveConfigHandler;
 import com.historycraft.jei.JEIAddonPlugin;
-import com.historycraft.jei.JEICleanup;
-import mezz.jei.api.ingredients.VanillaTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
@@ -45,10 +42,8 @@ public class CleanRecipeHandler {
                     HistoryCore.logger.info("removed recipe from: {} ", recipeOutput);
                     removingRecipes.add(map.getKey());
                     if (mod.isHide()) {
-                        JEICleanup.itemsToRemove.add(recipeOutput);
+                        JEIAddonPlugin.removeItem(recipeOutput);
                     }
-                } else {
-                    HistoryCore.logger.info("skipped recipe from: {} ", recipeOutput);
                 }
             });
         }

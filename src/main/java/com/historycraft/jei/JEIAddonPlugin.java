@@ -4,7 +4,11 @@ import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IIngredientBlacklist;
 import mezz.jei.api.ingredients.IIngredientHelper;
 import mezz.jei.api.ingredients.IIngredientRegistry;
+import mezz.jei.api.ingredients.VanillaTypes;
 import net.minecraft.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @JEIPlugin
 public class JEIAddonPlugin implements IModPlugin {
@@ -16,6 +20,8 @@ public class JEIAddonPlugin implements IModPlugin {
     public static IIngredientBlacklist iIngredientBlacklist;
     public static IModRegistry modRegistry;
     public static IJeiRuntime jeiRuntime;
+
+    public static List<ItemStack> itemsToRemove = new ArrayList<>();
 
     @Override
     public void register(IModRegistry registry) {
@@ -29,6 +35,12 @@ public class JEIAddonPlugin implements IModPlugin {
         recipeRegistry = iJeiRuntime.getRecipeRegistry();
         jeiRuntime = iJeiRuntime;
         JEICleanup.applyCleanup();
+        JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, itemsToRemove);
+    }
+
+
+    public static void removeItem(ItemStack itemStack) {
+        itemsToRemove.add(itemStack);
     }
 
 }
