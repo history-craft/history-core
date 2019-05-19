@@ -76,7 +76,7 @@ repositories {
 }
 
 dependencies {
-
+    testCompile "junit:junit:4.11"
     compile 'info.loenwind.autoconfig:AutoConfig:1.12.2-1.0.1'
     compile 'info.loenwind.autosave:AutoSave:1.12.2-1.0.10'
     compile "com.enderio.core:EnderCore:1.12.2-0.5.56:core"

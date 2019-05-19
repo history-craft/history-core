@@ -1,8 +1,8 @@
 package com.historycraft;
 
 
-import com.historycraft.config.JEIConfigHandler;
-import com.historycraft.config.RecipeConfigHandler;
+import com.historycraft.config.JEICleanupConfigHandler;
+import com.historycraft.config.RecipeCopyConfigHandler;
 import com.historycraft.recipe.RecipeHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -25,8 +25,11 @@ public class HistoryCore {
     {
         logger = event.getModLog();
 
-        new RecipeConfigHandler().init();
-        new JEIConfigHandler().init();
+        RecipeCopyConfigHandler recipeCopyConfigHandler = new RecipeCopyConfigHandler();
+        recipeCopyConfigHandler.init();
+
+        JEICleanupConfigHandler jeiCleanupConfigHandler = new JEICleanupConfigHandler();
+        jeiCleanupConfigHandler.init();
     }
 
     @Mod.EventHandler

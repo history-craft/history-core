@@ -1,70 +1,52 @@
 package com.historycraft.config;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.GsonBuilder;
 import com.historycraft.HistoryCore;
 import net.minecraftforge.fml.common.Loader;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 
-public abstract class ConfigHandler {
+public abstract class ConfigHandler<T> {
 
-    public final Gson gson = new Gson();
-    public static Path modPath = Loader.instance().getConfigDir().toPath().resolve(HistoryCore.MODID);
-    public File configFile;
+    private static Path modPath = Loader.instance().getConfigDir().toPath().resolve(HistoryCore.MODID);
+    public final Gson gson;
+    public final File configFile;
 
-    public ConfigHandler(String fileName) {
-        configFile = new File(modPath.toFile(), fileName + ".json");
+    private Class<T> type;
+
+    public ConfigHandler(String fileName, Class<T> type) {
+        this.configFile = new File(modPath.toFile(), fileName + ".json");
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setPrettyPrinting();
+        this.gson = gsonBuilder.create();
+        this.type = type;
     }
 
-    public String[] readArrayProperty(String property) {
-        List<String> list = new ArrayList<>();
-        try {
-            FileReader fileReader = new FileReader(configFile);
-            JsonParser jsonParser = new JsonParser();
-            JsonObject jsonObject = jsonParser.parse(fileReader).getAsJsonObject();
-            JsonArray array = jsonObject.getAsJsonArray(property);
-            array.forEach(jsonElement -> list.add(jsonElement.getAsString()));
-        } catch (Exception ex) {
-            HistoryCore.logger.error(ex);
-        }
-        return list.toArray(new String[0]);
-    }
-
-    public void init() {
+    public void init(){
         if (!configFile.exists()){
             if (!modPath.toFile().exists()) {
                 modPath.toFile().mkdir();
             }
-            try {
-                FileWriter fileWriter = new FileWriter(configFile);
-                gson.toJson(createDefaultFile(), fileWriter);
-                fileWriter.flush();
-                fileWriter.close();
+            try{
+                PrintWriter writer = new PrintWriter(configFile);
+                writer.print(gson.toJson(createDefaultFile()));
+                writer.close();
             } catch (Exception ex) {
-                HistoryCore.logger.error(ex);
+                HistoryCore.logger.error("Error on create default config file {}", ex);
             }
         }
-        doConfig();
-    }
-
-    protected abstract void doConfig();
-
-    public abstract JsonObject createDefaultFile();
-
-    public JsonArray copyFromArray(String [] array){
-        JsonArray jsonArray = new JsonArray();
-        for(String value : array) {
-            jsonArray.add(value);
+        try{
+            this.readConfig(gson.fromJson(new FileReader(configFile), type));
+        } catch (Exception ex) {
+            HistoryCore.logger.error("Error on read config file: {} error: {}", configFile.getName(), ex);
         }
-        return jsonArray;
     }
 
+    public abstract void readConfig(T file);
+
+    public abstract T createDefaultFile();
 }

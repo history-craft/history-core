@@ -1,5 +1,6 @@
 package com.historycraft.jei;
 
+import com.historycraft.HistoryCore;
 import gregtech.api.GTValues;
 import mezz.jei.api.ingredients.VanillaTypes;
 import net.minecraft.item.ItemStack;
@@ -52,6 +53,7 @@ public class JEICleanup {
                 for(ItemStack stack: OreDictionary.getOres(name)){
                     //if found, add all that is not from the mod
                     if (!modId.equals(ForgeHooks.getDefaultCreatorModId(stack))){
+                        HistoryCore.logger.info("removed: {} oredict: {}", stack,name);
                         toReturn.add(stack);
                     }
                 }
