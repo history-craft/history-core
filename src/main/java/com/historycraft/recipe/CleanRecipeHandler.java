@@ -9,7 +9,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.registries.GameData;
+import net.minecraftforge.registries.IForgeRegistryModifiable;
 import net.minecraftforge.registries.RegistryManager;
 
 import java.util.ArrayList;
@@ -22,8 +25,10 @@ public class CleanRecipeHandler {
     private static List<ResourceLocation> removingRecipes = new ArrayList<>();
     private static RecipeRemoveConfig recipeRemoveConfig = RecipeRemoveConfigHandler.getConfig();
 
-    public static void doCleanUp() {
-        for (Map.Entry<ResourceLocation, IRecipe> map : RecipeHandler.recipes) {
+    public static void doCleanUp(RegistryEvent.Register<IRecipe> event) {
+        IForgeRegistryModifiable modRegistry = (IForgeRegistryModifiable) event.getRegistry();
+       // for (Map.Entry<ResourceLocation, IRecipe> map : RecipeHandler.recipes) {
+        for (Map.Entry<ResourceLocation, IRecipe> map : event.getRegistry().getEntries()) {
             IRecipe iRecipe  = map.getValue();
             ItemStack recipeOutput = iRecipe.getRecipeOutput();
             recipeRemoveConfig.getMods().forEach(mod -> {
@@ -47,7 +52,9 @@ public class CleanRecipeHandler {
                 }
             });
         }
-        removingRecipes.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe));
+        removingRecipes.forEach(recipe -> {
+            modRegistry.remove(recipe);
+        });
     }
 
 }

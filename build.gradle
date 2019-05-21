@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = "1.1"
+version = "1.1.2"
 group = "com.historycraft.historycore" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "historycore"
 
@@ -84,7 +84,6 @@ dependencies {
     deobfCompile ('com.enderio:EnderIO:1.12.2-5.0.43') {
         exclude group: 'deobf.com.enderio.core', module: 'EnderCore'
     }
-    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.9.6"
     compile fileTree(include: ['*.jar'], dir: 'libs')
 }
 

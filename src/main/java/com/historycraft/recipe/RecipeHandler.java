@@ -45,7 +45,7 @@ public class RecipeHandler {
             changeSawRecipes();
         }
 
-        CleanRecipeHandler.doCleanUp();
+       // CleanRecipeHandler.doCleanUp();
 
     }
 
