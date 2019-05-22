@@ -5,7 +5,6 @@ import com.historycraft.config.OreDictUnificationConfigHandler;
 import com.historycraft.config.RecipeCopyConfigHandler;
 import com.historycraft.config.RecipeRemoveConfigHandler;
 import com.historycraft.recipe.RecipeHandler;
-import gregtech.common.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -19,7 +18,7 @@ public class HistoryCore {
 
     public static final String MODID = "historycore";
     public static final String NAME = "History Core";
-    public static final String VERSION = "1.1.2";
+    public static final String VERSION = "1.1.5";
 
     public static Logger logger;
 
