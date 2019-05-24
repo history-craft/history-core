@@ -1,5 +1,6 @@
 package com.historycraft.jei;
 
+import com.historycraft.unification.OreDictUnificationHandler;
 import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IIngredientBlacklist;
 import mezz.jei.api.ingredients.IIngredientHelper;
@@ -34,10 +35,11 @@ public class JEIAddonPlugin implements IModPlugin {
     public void onRuntimeAvailable(IJeiRuntime iJeiRuntime) {
         recipeRegistry = iJeiRuntime.getRecipeRegistry();
         jeiRuntime = iJeiRuntime;
-        JEICleanup.applyCleanup();
-        JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, itemsToRemove);
+        OreDictUnificationHandler.cleanDuplicatedItems();
+        if (!itemsToRemove.isEmpty()) {
+            JEIAddonPlugin.itemRegistry.removeIngredientsAtRuntime(VanillaTypes.ITEM, itemsToRemove);
+        }
     }
-
 
     public static void removeItem(ItemStack itemStack) {
         itemsToRemove.add(itemStack);

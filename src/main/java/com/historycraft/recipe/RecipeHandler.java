@@ -44,9 +44,6 @@ public class RecipeHandler {
         if (HistoryCoreConfig.changeSawRecipes) {
             changeSawRecipes();
         }
-
-       // CleanRecipeHandler.doCleanUp();
-
     }
 
     private static void changeSawRecipes() {

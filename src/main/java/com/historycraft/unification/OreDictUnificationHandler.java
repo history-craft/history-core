@@ -13,19 +13,7 @@ import java.util.List;
 
 public class OreDictUnificationHandler {
 
-    private static OreDictUnificationHandler oreDictUnificationHandler;
-
-    public static OreDictUnificationHandler getInstance() {
-        if (oreDictUnificationHandler == null) {
-            oreDictUnificationHandler = new OreDictUnificationHandler();
-        }
-        return oreDictUnificationHandler;
-    }
-
-    private OreDictUnificationHandler() {
-    }
-
-    public void cleanDuplicatedItems(){
+    public static void cleanDuplicatedItems(){
         for(String oreName:  OreDictionary.getOreNames()) {
             for(ItemStack itemStack:  getItemStackByName(oreName)){
                 JEIAddonPlugin.removeItem(itemStack);
@@ -33,7 +21,7 @@ public class OreDictUnificationHandler {
         }
     }
 
-    public List<ItemStack> getItemStackByName(String name) {
+    public static List<ItemStack> getItemStackByName(String name) {
         boolean found = false;
         for (OreDictUnificationConfig.OreDict oreDict : OreDictUnificationConfigHandler.oreDictUnificationConfig.getOreDicts()) {
             if (name.startsWith(oreDict.getOreDict())) {

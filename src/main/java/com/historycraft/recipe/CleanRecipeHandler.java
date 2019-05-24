@@ -10,10 +10,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.registries.GameData;
 import net.minecraftforge.registries.IForgeRegistryModifiable;
-import net.minecraftforge.registries.RegistryManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +24,6 @@ public class CleanRecipeHandler {
 
     public static void doCleanUp(RegistryEvent.Register<IRecipe> event) {
         IForgeRegistryModifiable modRegistry = (IForgeRegistryModifiable) event.getRegistry();
-       // for (Map.Entry<ResourceLocation, IRecipe> map : RecipeHandler.recipes) {
         for (Map.Entry<ResourceLocation, IRecipe> map : event.getRegistry().getEntries()) {
             IRecipe iRecipe  = map.getValue();
             ItemStack recipeOutput = iRecipe.getRecipeOutput();
