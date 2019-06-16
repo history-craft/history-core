@@ -1,7 +1,8 @@
 package com.historycraft.config;
 
 import gregtech.api.GTValues;
-import scala.actors.threadpool.Arrays;
+
+import java.util.Arrays;
 
 public class OreDictUnificationConfigHandler extends ConfigHandler<OreDictUnificationConfig> {
 
