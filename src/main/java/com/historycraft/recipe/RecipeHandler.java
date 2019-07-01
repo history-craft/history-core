@@ -2,10 +2,14 @@ package com.historycraft.recipe;
 
 import blusunrize.immersiveengineering.api.crafting.CrusherRecipe;
 import com.historycraft.HistoryCore;
+import com.historycraft.api.utils.HistoryCraftUtils;
 import com.historycraft.config.HistoryCoreConfig;
+import com.historycraft.config.RecipeRemoveConfigHandler;
 import gnu.trove.map.TObjectIntMap;
 import gregtech.api.GTValues;
 import gregtech.api.recipes.Recipe;
+import gregtech.api.recipes.RecipeBuilder;
+import gregtech.api.recipes.RecipeMap;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.recipes.builders.SimpleRecipeBuilder;
 import gregtech.api.unification.material.Materials;
@@ -30,6 +34,7 @@ public class RecipeHandler {
     public static String[] removedByProduct = new String[]{"ore1","ore2"};
     public static Map<FluidStack, Integer> lubricants = new HashMap<>();
     public static Set<Map.Entry<ResourceLocation, net.minecraft.item.crafting.IRecipe>> recipes;
+    private static HistoryCraftUtils utils = HistoryCraftUtils.getInstance();
 
     public static void changeRecipes() {
         if (HistoryCoreConfig.changeCrusherRecipes)
@@ -44,6 +49,12 @@ public class RecipeHandler {
         if (HistoryCoreConfig.changeSawRecipes) {
             changeSawRecipes();
         }
+
+
+        cleanMachineRecipe(RecipeMaps.ORE_WASHER_RECIPES);
+        cleanMachineRecipe(RecipeMaps.THERMAL_CENTRIFUGE_RECIPES);
+        cleanMachineRecipe(RecipeMaps.CENTRIFUGE_RECIPES);
+        cleanMachineRecipe(RecipeMaps.ELECTROLYZER_RECIPES);
     }
 
     private static void changeSawRecipes() {
@@ -52,7 +63,7 @@ public class RecipeHandler {
             recipe.getInputs().forEach(input -> {
                 for (int x = 0; x < input.getIngredient().getMatchingStacks().length; x++) {
                     ItemStack itemStack = input.getIngredient().getMatchingStacks()[x];
-                    if (getOreDictByItemStack(itemStack).stream().filter(s -> s.contains("Wood")).count() > 0){
+                    if (utils.getOreDictByItemStack(itemStack).stream().filter(s -> s.contains("Wood")).count() > 0){
                         RecipesMachine.getInstance().addRecipe(TileCuttingMachine.class, recipe.getOutputs().toArray(), 25, 350, itemStack);
                     }
                 }
@@ -180,7 +191,7 @@ public class RecipeHandler {
         for (IRecipe iRecipe : iRecipes) {
             boolean added = false;
             for (ItemStack stack : iRecipe.getOutput()) {
-                List<String> oreDicts = getOreDictByItemStack(stack);
+                List<String> oreDicts = utils.getOreDictByItemStack(stack);
                 for (String oreDict : oreDicts) {
                     if (oreDict.startsWith(name)) {
                         toRemove.add(iRecipe);
@@ -248,18 +259,55 @@ public class RecipeHandler {
         });
     }
 
-    private static List<String> getOreDictByItemStack(ItemStack itemStack) {
-        List<String> result = new ArrayList<>();
-        int[] oreIDs = OreDictionary.getOreIDs(itemStack);
-        for (int id : oreIDs) {
-            result.add(OreDictionary.getOreName(id));
+    private static void cleanMachineRecipe(RecipeMap<SimpleRecipeBuilder> recipeMap) {
+        List<Recipe> toRemove = new ArrayList<>();
+        List<RecipeBuilder> toAdd = new ArrayList<>();
+        for (Recipe recipe: recipeMap.getRecipeList()){
+            boolean remove = false;
+            boolean add = false;
+
+            SimpleRecipeBuilder recipeBuilder = recipeMap.recipeBuilder()
+                    .inputsIngredients(recipe.getInputs())
+                    .EUt(recipe.getEUt());
+
+            for (ItemStack itemStack : recipe.getOutputs()){
+                if (utils.isOreDictByItemStack(itemStack, RecipeRemoveConfigHandler.getConfig().getRemovedMachineOres().toArray(new String[0]))){
+                    remove = true;
+                } else {
+                    add = true;
+                    recipeBuilder.outputs(itemStack);
+                }
+            }
+
+            for (ItemStack itemStack : recipe.getChancedOutputs().keySet()){
+                if (utils.isOreDictByItemStack(itemStack, RecipeRemoveConfigHandler.getConfig().getRemovedMachineOres().toArray(new String[0]))){
+                    remove = true;
+                } else {
+                    add = true;
+                    recipeBuilder.chancedOutput(itemStack, recipe.getChancedOutputs().get(itemStack));
+                }
+            }
+
+            if (remove) {
+                toRemove.add(recipe);
+            }
+            if (remove && add) {
+                toAdd.add(recipeBuilder);
+            }
+        }
+        for (Recipe recipe : toRemove) {
+            recipeMap.removeRecipe(recipe);
         }
 
-        return result;
+        for (RecipeBuilder recipeBuilder : toAdd) {
+            recipeBuilder.buildAndRegister();
+        }
     }
 
+
+
     private static boolean isEnableByProduct(ItemStack itemStack) {
-        for (String name : getOreDictByItemStack(itemStack)) {
+        for (String name : utils.getOreDictByItemStack(itemStack)) {
             for (String product : removedByProduct) {
                 if (name.equalsIgnoreCase(product)) {
                     return false;

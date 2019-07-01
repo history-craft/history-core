@@ -21,4 +21,7 @@ public class HistoryCoreConfig {
     @Config.Comment("Update cutting machine recipes using modpack items [Default : true]")
     public static boolean changeSawRecipes = true;
 
+    @Config.Comment("Remove metal recipes from crafing table (like ingot and nugget) [Default : true]")
+    public static boolean removeMetalsFromCraftingTable = true;
+
 }

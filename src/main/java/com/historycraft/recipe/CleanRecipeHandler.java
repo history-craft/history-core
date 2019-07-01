@@ -2,6 +2,7 @@ package com.historycraft.recipe;
 
 import com.historycraft.HistoryCore;
 import com.historycraft.api.utils.HistoryCraftUtils;
+import com.historycraft.config.HistoryCoreConfig;
 import com.historycraft.config.RecipeRemoveConfig;
 import com.historycraft.config.RecipeRemoveConfigHandler;
 import com.historycraft.jei.JEIAddonPlugin;
@@ -21,8 +22,10 @@ public class CleanRecipeHandler {
 
     private static List<ResourceLocation> removingRecipes = new ArrayList<>();
     private static RecipeRemoveConfig recipeRemoveConfig = RecipeRemoveConfigHandler.getConfig();
+    private static HistoryCraftUtils utils = HistoryCraftUtils.getInstance();
 
     public static void doCleanUp(RegistryEvent.Register<IRecipe> event) {
+        HistoryCore.logger.info("--------------------------------------doCleanUp------------------------------------");
         IForgeRegistryModifiable modRegistry = (IForgeRegistryModifiable) event.getRegistry();
         for (Map.Entry<ResourceLocation, IRecipe> map : event.getRegistry().getEntries()) {
             IRecipe iRecipe  = map.getValue();
@@ -47,8 +50,19 @@ public class CleanRecipeHandler {
                     }
                 }
             });
+
+            if (recipeOutput != null && !recipeOutput.isEmpty()){
+                if (utils.isOreDictByItemStack(recipeOutput,"ingot", "nugget")) {
+                    removingRecipes.add(map.getKey());
+                    HistoryCore.logger.info("removed recipe by oredict from: {} ", recipeOutput);
+                }
+            } else {
+                HistoryCore.logger.info("Invalid outputstack {} ", recipeOutput);
+            }
+
         }
         removingRecipes.forEach(recipe -> {
+            HistoryCore.logger.info("removed sharped {} ", recipe);
             modRegistry.remove(recipe);
         });
     }

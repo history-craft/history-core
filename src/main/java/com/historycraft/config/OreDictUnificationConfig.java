@@ -8,8 +8,6 @@ public class OreDictUnificationConfig {
     private List<String> modOrderId;
     private List<OreDict> oreDicts;
 
-
-
     public static class OreDict {
         private String  oreDict;
         private String  defaultItem;
