@@ -52,7 +52,7 @@ public class CleanRecipeHandler {
             });
 
             if (recipeOutput != null && !recipeOutput.isEmpty()){
-                if (utils.isOreDictByItemStack(recipeOutput,"ingot", "nugget")) {
+                if (utils.isOreDictByItemStack(recipeOutput,"ingot", "nugget") && !utils.isOreDictByItemStack(recipeOutput,"ingotDouble")) {
                     removingRecipes.add(map.getKey());
                     HistoryCore.logger.info("removed recipe by oredict from: {} ", recipeOutput);
                 }
