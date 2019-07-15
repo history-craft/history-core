@@ -1,6 +1,10 @@
 package com.historycraft.api.utils;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HistoryCraftUtils {
 
@@ -34,6 +38,26 @@ public class HistoryCraftUtils {
             return false;
         }
         return true;
+    }
+
+    public boolean isOreDictByItemStack(ItemStack itemStack, String... oreDicts) {
+        for (String stackOreDict: getOreDictByItemStack(itemStack)){
+            for(String compOreDict: oreDicts) {
+                if (stackOreDict.contains(compOreDict)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public List<String> getOreDictByItemStack(ItemStack itemStack) {
+        List<String> result = new ArrayList<>();
+        int[] oreIDs = OreDictionary.getOreIDs(itemStack);
+        for (int id : oreIDs) {
+            result.add(OreDictionary.getOreName(id));
+        }
+        return result;
     }
 
     public static HistoryCraftUtils getInstance() {

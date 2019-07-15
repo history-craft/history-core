@@ -58,6 +58,21 @@ public class RecipeRemoveConfig {
         return this;
     }
 
+    private List<String> removedMachineOres = new ArrayList<>();
+
+    public RecipeRemoveConfig addMachineOre(String machineOre) {
+        removedMachineOres.add(machineOre);
+        return this;
+    }
+
+    public List<String> getRemovedMachineOres() {
+        return removedMachineOres;
+    }
+
+    public void setRemovedMachineOres(List<String> removedMachineOres) {
+        this.removedMachineOres = removedMachineOres;
+    }
+
     public static RecipeRemoveConfig create(){
         return new RecipeRemoveConfig();
     }

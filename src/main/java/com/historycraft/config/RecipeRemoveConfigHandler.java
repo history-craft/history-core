@@ -21,6 +21,7 @@ public class RecipeRemoveConfigHandler extends ConfigHandler<RecipeRemoveConfig>
                 .setHide(true)
                 .addToWhiteList("item1")
                 .addToWhiteList("item2"));
+        defaultFile.addMachineOre("Aluminium");
         return defaultFile;
     }
 
