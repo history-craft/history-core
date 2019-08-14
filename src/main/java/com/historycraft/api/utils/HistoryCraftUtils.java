@@ -1,8 +1,12 @@
 package com.historycraft.api.utils;
 
+import com.historycraft.HistoryCore;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,5 +69,13 @@ public class HistoryCraftUtils {
             historyCraftUtils = new HistoryCraftUtils();
         }
         return historyCraftUtils;
+    }
+
+    public File getFileFromURL(String directory) {
+        URL url = HistoryCore.class.getClassLoader().getResource(directory);
+        if (url != null) {
+            return new File(url.getFile());
+        }
+        return null;
     }
 }
