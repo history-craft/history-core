@@ -117,7 +117,9 @@ public class RecipeHandler {
                 power = (int) ingot.getAverageMass() * 2;
             }
 
+            outputStack = outputStack.copy();
             outputStack.setCount(multiplier);
+
             RecipesMachine.getInstance().addRecipe(TileLathe.class, outputStack, time, power, inputName);
         }
     }
@@ -153,6 +155,7 @@ public class RecipeHandler {
                 time = (int) ingot.getAverageMass();
                 power = (int) ingot.getAverageMass() * 2;
             }
+            outputStack = outputStack.copy();
 
             outputStack.setCount(multiplier);
 
